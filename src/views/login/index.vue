@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">人力资源管理平台</h3>
       </div>
 
       <el-form-item prop="mobile">
@@ -19,7 +19,7 @@
         <el-input
           ref="mobile"
           v-model="loginForm.mobile"
-          placeholder="mobile"
+          placeholder="请输入手机号码"
           name="mobile"
           type="text"
           tabindex="1"
@@ -36,7 +36,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -48,18 +48,15 @@
           />
         </span>
       </el-form-item>
-
       <el-button
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
-        >Login</el-button
-      >
-
+      >Login</el-button>
       <div class="tips">
-        <span style="margin-right:20px;">mobile: admin</span>
-        <span> password: any</span>
+        <span style="margin-right:20px;">mobile: 13800000002</span>
+        <span>password: 123456</span>
       </div>
     </el-form>
   </div>
@@ -67,35 +64,29 @@
 
 <script>
 import { validMobile } from '@/utils/validate'
+// import { sysLogin } from '@/api/user.js'
 
 export default {
   name: 'Login',
   data () {
-    const validatemobile = (rule, value, callback) => {
-      if (!validMobile(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
+    const validateMobile = (rule, value, callback) => {
+      validMobile(value)
+        ? callback()
+        : callback(new Error('请输入正确的手机号码'))
     }
     return {
       loginForm: {
-        mobile: 'admin',
-        password: '111111'
+        mobile: '13800000002',
+        password: '123456'
       },
       loginRules: {
         mobile: [
-          { required: true, trigger: 'blur', validator: validatemobile }
+          { required: true, trigger: 'blur', message: '手机号不能为空' },
+          { validator: validateMobile, trigger: 'blur' }
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
+          { required: true, trigger: 'blur', message: '密码不能为空' },
+          { min: 6, max: 16, trigger: 'blur', message: '密码长度只能是6-16位' }
         ]
       },
       loading: false,
@@ -123,21 +114,25 @@ export default {
       })
     },
     handleLogin () {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
+      // 局部表单验证
+      // this.$refs.loginForm.validateField(['password'], errMessage => {
+      //   if (errMessage === '密码不能为空') {
+      //     this.$message.error('密码长度验证失败')
+      //   } else {
+      //     this.$message.success('密码长度验证成功')
+      //   }
+      // })
+
+      // 全局表单验证
+      this.$refs.loginForm.validate(async result => {
+        if (result) {
+          await this.$store.dispatch('user/actionsfnLogin', this.loginForm)
+          // 如果有路由参数（说明之前是token过期导致的重新登录），则回跳到重新登录之前所在的页面
+          this.$route.query.xxx
+            ? this.$router.push(this.$route.query.xxx)
+            : this.$router.push('/')
         } else {
-          console.log('error submit!!')
-          return false
+          this.$message.error('登录失败')
         }
       })
     }

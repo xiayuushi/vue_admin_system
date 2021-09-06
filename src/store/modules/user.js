@@ -1,97 +1,56 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
-
-const getDefaultState = () => {
-  return {
-    token: getToken(),
-    name: '',
-    avatar: ''
-  }
+import { sysLogin, sysProfile, sysUser } from '@/api/user'
+import { setToken, getToken, removeToken } from '@/utils/auth'
+const state = {
+  // 本地有则读取本地缓存，否则取空值
+  token: getToken() || '',
+  userInfo: ''
 }
-
-const state = getDefaultState()
-
 const mutations = {
-  RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
+  // 1、设置token
+  mutationsfnSetToken (state, payload) {
+    state.token = payload
+    // 同时进行本地备份
+    setToken(payload)
   },
-  SET_TOKEN: (state, token) => {
-    state.token = token
+
+  // 2、重置清空token
+  mutationsfnRemoveToken (state) {
+    state.token = ''
+    // 清理掉本地备份
+    removeToken()
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  // 3、设置用户信息
+  mutationsfnSetUserInfo (state, payload) {
+    state.userInfo = payload
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  // 4、同时删除token与用户信息userInfo
+  mutationsfnDel () {
+    this.commit('user/mutationsfnRemoveToken')
+    this.commit('user/mutationsfnSetUserInfo', '')
   }
 }
-
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  async actionsfnLogin ({ commit }, v) {
+    // 调用预先封装好的api 获取token
+    const res = await sysLogin(v)
+    // 记录时间做主动触发token失效
+    localStorage.setItem('loginTime', Date.now())
+    // 将请求回来的数据替换修改原来state中的初始数据
+    commit('mutationsfnSetToken', res.data.data)
+    // console.log(res)
   },
-
-  // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // remove token
-  resetToken({ commit }) {
-    return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
-      resolve()
-    })
+  async actionsfnGetUserInfo ({ commit }) {
+    // 获取用户信息用于验证token正确性
+    const res = await sysProfile()
+    commit('mutationsfnSetUserInfo', res)
+    // 获取完用户信息后再调用另一个有头像的接口获取头像
+    const res2 = await sysUser(res.data.data.userId)
+    // 将两个请求的数据合并到state.userInfo中 方式1
+    // commit('mutationsfnSetUserInfo', { ...res, ...res2 })
+    // 将两个请求的数据合并到state.userInfo中 方式2
+    commit('mutationsfnSetUserInfo', Object.assign({}, res, res2))
   }
 }
+const getters = {}
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
-
+export default { namespaced: true, state, mutations, actions, getters }
