@@ -74,17 +74,17 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/test',
+    path: '/departments',
     // 必须设置component: Layout
     // 否则不会被嵌套进layout组件中成为layout的子级组件
     component: Layout,
     children: [
       {
         path: '',
-        name: 'Test',
-        component: () => import('@/views/dashboard/test'),
+        name: 'Departments',
+        component: () => import('@/views/departments/index'),
         // icon可以直接添加element-ui的icon类名（无锡带"."）
-        meta: { title: 'Test', icon: 'dashboard' }
+        meta: { title: '组织架构', icon: 'el-icon-menu' }
       }
     ]
   },
