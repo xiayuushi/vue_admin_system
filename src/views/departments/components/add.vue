@@ -83,6 +83,7 @@ export default {
           // 编辑时，因为自己可以重复，因此要排除自己，但其他不能重复
           item => item.name === value && item.id !== this.currentRow.id
         )
+
         bol ? callback(new Error('已存在重复部门' + value)) : callback()
       }
     }
@@ -224,7 +225,13 @@ export default {
     },
     // 部门编辑
     async editDepartment () {
-      const res = await companyDepartmentEdit(this.model)
+      const res = await companyDepartmentEdit({
+        name: this.model.name,
+        code: this.model.code,
+        manager: this.model.manager,
+        introduce: this.model.introduce,
+        id: this.model.id
+      })
       if (res.data.code === 10000) {
         this.$message.success('编辑成功')
       }

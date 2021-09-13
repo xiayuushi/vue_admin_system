@@ -51,15 +51,16 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/setting',
     // meta对象就是设置侧边栏标题及图标的
     // meta: { title: '测试侧边菜单栏标题', icon: 'dashboard' },
     children: [
       // 此处children配置的路由会显示到侧边菜单栏中（当数量2个以上时就会显示二级菜单导航,且hidden不为true时）
       // 如果子路由只有一个的情况下，也只会显示到侧边栏菜单
       {
-        path: '',
-        name: 'Dashboard',
+        path: '/yyy',
+        name: 'yyy',
+        hidden: true,
         component: () => import('@/views/dashboard/index'),
         meta: { title: 'Dashboard', icon: 'dashboard' }
       },
@@ -70,6 +71,18 @@ export const constantRoutes = [
         name: 'Xxx',
         component: () => import('@/views/dashboard/index'),
         meta: { title: 'Dashboard', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/index',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'Index',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
       }
     ]
   },
@@ -85,6 +98,18 @@ export const constantRoutes = [
         component: () => import('@/views/departments/index'),
         // icon可以直接添加element-ui的icon类名（无锡带"."）
         meta: { title: '组织架构', icon: 'el-icon-menu' }
+      }
+    ]
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'Setting',
+        component: () => import('@/views/setting/index'),
+        meta: { title: '公司设置', icon: 'el-icon-setting' }
       }
     ]
   },
