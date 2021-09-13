@@ -47,3 +47,12 @@ export function sysRoleEditUpdate (data) {
     addToken: true
   })
 }
+
+// 根据id查询企业
+export function getCompany (id) {
+  return request({
+    url: `/company/${id}`,
+    method: 'get',
+    addToken: true
+  })
+}

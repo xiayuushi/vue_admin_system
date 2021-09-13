@@ -57,7 +57,11 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane label="公司信息" name="company">公司信息</el-tab-pane>
+        <el-tab-pane label="公司信息" name="company">
+          <!-- <company ref="company" /> -->
+          <!-- 异步动态组件 -->
+          <component :is="'company'" ref="company" />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
     <add ref="add" v-model="dialogShow" @refresh="getRole" />
@@ -65,22 +69,26 @@
 </template>
 
 <script>
-import { sysRole, sysRoleDel, sysRoleGet } from '@/api/setting'
+import { sysRole, sysRoleDel, sysRoleGet, getCompany } from '@/api/setting'
+import { mapGetters } from 'vuex'
 import add from './components/add'
+// import company from './components/company'
+// 异步组件
+const company = () => import('./components/company')
 export default {
-  components: { add },
+  components: { add, company },
   data () {
     return {
       roleInfo: '', // 获取角色详情
       dialogShow: false, // 对话框表单显示隐藏
       activeName: 'roles', // 默认选中的tab标签页
       list: [
-        // // 表格数据
-        // {
-        //   id: 1, // 序号
-        //   name: 'xxx', // 角色名称
-        //   description: 'describe' // 描述
-        // }
+        // 表格数据
+        {
+          id: 1, // 序号
+          name: 'xxx', // 角色名称
+          description: 'describe' // 描述
+        }
       ],
       page: {
         // 分页器数据
@@ -91,15 +99,26 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   created () {
     this.getRole({
       page: this.page.page,
       pagesize: this.page.pageSize
     })
+    // console.log(this.userInfo.data.data.companyId)
+    this.getCompanyInfo()
   },
   methods: {
-    // 编辑更新
-    // sysRoleEdit
+    //  获取公司信息
+    async getCompanyInfo () {
+      const res = await getCompany(this.userInfo.data.data.companyId)
+      // console.log(res)
+      if (res.data.code === 10000) {
+        this.$refs.company.companyInfo = res.data.data
+      }
+    },
     // 编辑表格当前行数据
     async edit (row) {
       this.dialogShow = true
