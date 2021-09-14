@@ -6,18 +6,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'Dashboard',
+  data () {
+    return {}
+  },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    ...mapGetters(['name'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.xxx {
+  color: #f00;
+}
 .dashboard {
   &-container {
     margin: 30px;

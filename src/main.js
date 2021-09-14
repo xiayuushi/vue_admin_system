@@ -15,7 +15,10 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-Vue.prototype.$bus = new Vue()
+import TipInfo from './utils/tip-info' // 导入自定义封装好的全局组件插件
+Vue.use(TipInfo) // 全局注册自定义的全局公共组件
+
+Vue.prototype.$bus = new Vue() // 创建bus对象以便兄弟组件传值
 
 /**
  * If you don't want to use mock-server
@@ -31,9 +34,9 @@ Vue.prototype.$bus = new Vue()
 // }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
