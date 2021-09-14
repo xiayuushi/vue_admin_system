@@ -113,6 +113,17 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/employees',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/employees/index'),
+        meta: { title: '员工', icon: 'el-icon-s-custom' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
