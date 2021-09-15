@@ -15,7 +15,9 @@
       <el-table-column label="姓名" prop="username" align="center" />
       <el-table-column label="手机号" prop="mobile" />
       <el-table-column label="工号" prop="workNumber" />
-      <el-table-column label="聘用形式" prop="formOfEmployment" align="center" />
+      <el-table-column label="聘用形式" prop="formOfEmployment" align="center">
+        <template v-slot="{ row }">{{ row.formOfEmployment| formatHireType }}</template>
+      </el-table-column>
       <el-table-column label="部门" prop="departmentName" align="center" />
       <el-table-column label="入职时间" prop="timeOfEntry" width="200" />
       <el-table-column label="是否在职" prop="formOfEmployment" align="center" />
@@ -58,7 +60,7 @@ export default {
         {
           correctionTime: '2018-11-30', // 离开时间
           departmentName: '总裁办', // 部门
-          formOfEmployment: '1', // 聘用形式
+          formOfEmployment: 1, // 聘用形式
           id: '604f764971f93f3ac8f365c2', // id
           mobile: '13800000002', // 手机号
           password: 'e10adc3949ba59abbe56e057f20f883e', // 密码
@@ -84,7 +86,7 @@ export default {
   methods: {
     async getUserList (data) {
       const res = await sysUser({ page: this.pagination.page, size: this.pagination.size })
-      // console.log(res.data)
+      console.log(res.data)
       if (res.data.code === 10000) {
         this.list = res.data.data.rows
         this.pagination.total = res.data.data.total

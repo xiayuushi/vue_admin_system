@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+// import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 
@@ -17,6 +17,9 @@ import '@/permission' // permission control
 
 import TipInfo from './utils/tip-info' // 导入自定义封装好的全局组件插件
 Vue.use(TipInfo) // 全局注册自定义的全局公共组件
+
+import filtersfn from './filters' // 导入自定义的所有过滤器对象
+Object.keys(filtersfn).forEach(item => Vue.filter(item, filtersfn[item]))
 
 Vue.prototype.$bus = new Vue() // 创建bus对象以便兄弟组件传值
 
