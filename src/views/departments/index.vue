@@ -6,7 +6,7 @@
         <el-tab-pane label="组织架构">
           <div class="tree-container">
             <treeItem :item="topInfo" :is-top="true" @refresh="getList" />
-            <hr />
+            <hr>
             <!-- 树形结构 -->
             <el-tree
               v-loading="loading"
