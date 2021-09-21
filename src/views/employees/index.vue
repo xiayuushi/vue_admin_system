@@ -23,20 +23,23 @@
       </el-table-column>
       <el-table-column label="姓名" prop="username" align="center" />
       <el-table-column label="手机号" prop="mobile" />
-      <el-table-column label="工号" prop="workNumber" />
-      <el-table-column label="聘用形式" prop="formOfEmployment" align="center">
+      <el-table-column label="工号" prop="workNumber" width="100" />
+      <el-table-column label="聘用形式" prop="formOfEmployment" align="center" width="100px">
         <template v-slot="{ row }">{{
           row.formOfEmployment | formatHireType
         }}</template>
       </el-table-column>
       <el-table-column label="部门" prop="departmentName" align="center" />
-      <el-table-column label="入职时间" prop="timeOfEntry" width="200" />
+      <el-table-column label="入职时间" prop="timeOfEntry" width="100">
+        <template v-slot="{ row }">{{ row.timeOfEntry | formatTime }}</template>
+      </el-table-column>
       <el-table-column
         label="是否在职"
         prop="formOfEmployment"
         align="center"
+        width="100"
       />
-      <el-table-column label="状态" prop="formOfEmployment" align="center" />
+      <el-table-column label="状态" prop="formOfEmployment" align="center" width="100" />
       <el-table-column label="操作" prop="username" width="300" align="center">
         <template v-slot="{ row }">
           <el-button type="text">查看</el-button>
@@ -107,7 +110,6 @@ export default {
   methods: {
     // 新增员工
     addClick () {
-      console.log('新增')
       this.showAdd = true
     },
     // 删除当前列表项

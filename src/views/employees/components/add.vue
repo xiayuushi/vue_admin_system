@@ -35,7 +35,7 @@
       <el-form-item label="部门" prop="departmentName">
         <el-cascader
           ref="cascader"
-          v-model="form.departmentName"
+          value="form.departmentName"
           :options="departmentList"
           :props="props"
           @change="handleChange"

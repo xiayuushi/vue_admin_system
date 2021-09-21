@@ -1,5 +1,6 @@
 // 全局过滤器
 
+import moment from 'moment'
 // 需要处理的对象
 import data from '@/views/employees/data'
 
@@ -28,5 +29,9 @@ export default {
       // Q2、没有聘用字段 或者 聘用字段不规范
       return '非正式'
     }
+  },
+  // 处理聘用形式
+  formatTime: v => {
+    return moment(v).format('YYYY-MM-DD')
   }
 }
