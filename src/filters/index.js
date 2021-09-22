@@ -2,7 +2,7 @@
 
 import moment from 'moment'
 // 需要处理的对象
-import data from '@/views/employees/data'
+import EmployeeEnum from '@/views/employees/constant'
 
 export default {
   // 处理聘用形式
@@ -19,7 +19,7 @@ export default {
         // 考虑到后端返回的数据类型不一致，因此必须转数据格式
         v = Number(v)
         // 匹配数据
-        const str = data.hireType.find(item => item.id === v)
+        const str = EmployeeEnum.hireType.find(item => item.id === v)
         // 匹配成功返回数据对应的值
         return str.value
       } catch (error) {

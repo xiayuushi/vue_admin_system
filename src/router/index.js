@@ -123,9 +123,14 @@ export const constantRoutes = [
         meta: { title: '员工', icon: 'el-icon-s-custom' }
       },
       {
+        hidden: true,
         path: '/excel',
-        component: () => import('@/views/employees/components/uploadExcel'),
-        hidden: true
+        component: () => import('@/views/employees/components/excel')
+      },
+      {
+        hidden: true,
+        path: '/detail/:id?',
+        component: () => import('@/views/employees/components/detail')
       }
     ]
   },

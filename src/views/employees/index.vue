@@ -52,7 +52,7 @@
       />
       <el-table-column label="操作" prop="username" width="300" align="center">
         <template v-slot="{ row }">
-          <el-button type="text">查看</el-button>
+          <el-button type="text" @click="lookInfo(row.id)">查看</el-button>
           <el-button type="text">转正</el-button>
           <el-button type="text">调岗</el-button>
           <el-button type="text">离职</el-button>
@@ -118,6 +118,11 @@ export default {
     this.getUserList(this.pagination)
   },
   methods: {
+    // 查看详情
+    lookInfo (id) {
+      this.$router.push('/detail/' + id)
+    },
+    // 去excel文件上传页
     uploadExcel () {
       this.$router.push('/excel?redirect=' + this.$route.fullPath)
     },

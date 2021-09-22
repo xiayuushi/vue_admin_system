@@ -53,7 +53,7 @@
 import { validMobile } from '@/utils/validate'
 import { sysUserAdd } from '@/api/employees'
 import { companyDepartment } from '@/api/departments'
-import data from '../data/index'
+import EmployeeEnum from '../constant/index'
 export default {
   props: {
     show: {
@@ -127,7 +127,7 @@ export default {
           }
         ]
       },
-      hireType: data.hireType, // 引入本地资源进行实时渲染必须先在data中声明
+      hireType: EmployeeEnum.hireType, // 引入本地资源进行实时渲染必须先在data中声明
       props: {
         // 重新配置级联数据键值对
         label: 'name',

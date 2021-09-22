@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <UploadExcel :before-upload="beforeUpload" :on-success="onSuccess" />
+    <ExcelRead :before-upload="beforeUpload" :on-success="onSuccess" />
   </el-card>
 </template>
 

@@ -38,3 +38,50 @@ export function sysUserBatch (data) {
     addToken: true
   })
 }
+
+// 修改员工个人信息
+export function sysUserPut (data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'put',
+    data,
+    addToken: true
+  })
+}
+
+// 获取用户详情的基础信息
+export function getPersonalDetail (id) {
+  return request({
+    url: `/employees/${id}/personalInfo`,
+    method: 'get',
+    addToken: true
+  })
+}
+
+// 更新用户详情的基础信息
+export function updatePersonalDetail (data) {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'put',
+    data,
+    addToken: true
+  })
+}
+
+// 获取用户岗位信息
+export function getJobDetail (id) {
+  return request({
+    url: `/employees/${id}/jobs`,
+    addToken: true
+  })
+}
+
+// 更新用户岗位信息
+export function updateJob (data) {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'put',
+    data,
+    addToken: true
+  })
+}
