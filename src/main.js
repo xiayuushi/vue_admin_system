@@ -15,8 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-import TipInfo from './utils/tip-info' // 导入自定义封装好的全局组件插件
-Vue.use(TipInfo) // 全局注册自定义的全局公共组件
+import common from './utils/common' // 导入自定义封装好的全局组件插件
+Vue.use(common) // 全局注册自定义的全局公共组件
 
 import filtersfn from './filters' // 导入自定义的所有过滤器对象
 Object.keys(filtersfn).forEach(item => Vue.filter(item, filtersfn[item]))

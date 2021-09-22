@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <TipInfo class="tip-info">
       <template #right>
-        <el-button type="primary">导入</el-button>
+        <el-button type="primary" @click="uploadExcel">导入</el-button>
         <el-button type="primary" @click="addClick">+ 新增员工</el-button>
       </template>
     </TipInfo>
@@ -24,7 +24,12 @@
       <el-table-column label="姓名" prop="username" align="center" />
       <el-table-column label="手机号" prop="mobile" />
       <el-table-column label="工号" prop="workNumber" width="100" />
-      <el-table-column label="聘用形式" prop="formOfEmployment" align="center" width="100px">
+      <el-table-column
+        label="聘用形式"
+        prop="formOfEmployment"
+        align="center"
+        width="100px"
+      >
         <template v-slot="{ row }">{{
           row.formOfEmployment | formatHireType
         }}</template>
@@ -39,7 +44,12 @@
         align="center"
         width="100"
       />
-      <el-table-column label="状态" prop="formOfEmployment" align="center" width="100" />
+      <el-table-column
+        label="状态"
+        prop="formOfEmployment"
+        align="center"
+        width="100"
+      />
       <el-table-column label="操作" prop="username" width="300" align="center">
         <template v-slot="{ row }">
           <el-button type="text">查看</el-button>
@@ -108,6 +118,9 @@ export default {
     this.getUserList(this.pagination)
   },
   methods: {
+    uploadExcel () {
+      this.$router.push('/excel?redirect=' + this.$route.fullPath)
+    },
     // 新增员工
     addClick () {
       this.showAdd = true

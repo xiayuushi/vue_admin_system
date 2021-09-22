@@ -121,6 +121,11 @@ export const constantRoutes = [
         path: '',
         component: () => import('@/views/employees/index'),
         meta: { title: '员工', icon: 'el-icon-s-custom' }
+      },
+      {
+        path: '/excel',
+        component: () => import('@/views/employees/components/uploadExcel'),
+        hidden: true
       }
     ]
   },
