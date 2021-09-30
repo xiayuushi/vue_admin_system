@@ -38,7 +38,9 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://47.106.228.28:3001'
+        target: 'http://localhost:3000',
+        // target: 'http://ihrm-java.itheima.net',
+        changeOrigin: true
       }
     }
     // before: require('./mock/mock-server.js')

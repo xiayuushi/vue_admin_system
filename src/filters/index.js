@@ -30,7 +30,7 @@ export default {
       return '非正式'
     }
   },
-  // 处理聘用形式
+  // 处理聘用时间
   formatTime: v => {
     return moment(v).format('YYYY-MM-DD')
   }

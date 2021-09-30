@@ -34,7 +34,6 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-// import { removeToken } from '@/utils/auth'
 export default {
   // 局部自定义指令 v-imgerr
   // 当图片地址报错时，使用默认线上地址图片
@@ -43,9 +42,12 @@ export default {
       inserted (dom, obj, vnode) {
         // 图片有src属性，则使用src属性的内容(服务器返回的图片)，否则默认使用本地或者固定线上图片给src属性
         dom.src = dom.src || obj.value
-        dom.onerror = () => {
-          dom.src = obj.value
-        }
+        dom.onerror = () => (dom.src = obj.value)
+      },
+      componentUpdated (dom, obj) {
+        // dom有更新、组件有更新会再次执行，因为inserted周期只执行一次，但是onerror只要监听到错误就会执行
+        // 这么做是为了避免坑点
+        dom.src = dom.src || obj.value
       }
     }
   },
@@ -53,6 +55,7 @@ export default {
     return {
       // 线上图片
       defaultImg: 'http://via.placeholder.com/30x30.png'
+
       // 本地图片
       // defaultImg: require('@/assets/404_images/404.png')
     }
@@ -61,14 +64,9 @@ export default {
     ...mapState('user', ['userInfo']),
     ...mapGetters(['sidebar'])
   },
-  created () {
-    // console.log(this.userInfo.data.data.staffPhoto)
-    // console.log(this.userInfo.data.data.username)
-  },
-
   methods: {
     ...mapActions('app', ['toggleSideBar']),
-    ...mapMutations('user/', ['mutationsfnDel']),
+    ...mapMutations('user', ['mutationsfnDel']),
     openSideBar () {
       this.toggleSideBar()
     },
@@ -88,9 +86,7 @@ export default {
               this.$router.push('/login')
             })
             .catch(() => {
-              // window.console.log('点击了取消')
             })
-          // removeToken()
           break
       }
     }

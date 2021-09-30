@@ -1,10 +1,6 @@
 <template>
   <div class="dialog-self">
-    <el-dialog
-      :visible="value"
-      :title="mode === 'add' ? '新增角色' : '编辑角色'"
-      @close="closeDialog"
-    >
+    <el-dialog :visible="visible" :title="title" @close="close">
       <el-form ref="form" label-width="100px" :model="form" :rules="rules">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="form.name" />
@@ -14,7 +10,7 @@
         </el-form-item>
       </el-form>
       <template slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取消</el-button>
+        <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="submit">确认</el-button>
       </template>
     </el-dialog>
@@ -22,83 +18,62 @@
 </template>
 
 <script>
-import { sysRoleAdd, sysRoleEditUpdate } from '@/api/setting'
+import { sysRolePost, sysRoleEditUpdate } from '@/api/setting'
 export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ['value'],
+  model: {
+    prop: 'visible'
+  },
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       mode: 'add', // 标记对话框为编辑状态或者新增状态
-      form: {
-        // 表单数据
-        id: '',
-        name: '',
-        description: ''
-      },
+      form: { id: '', name: '', description: '' },
       rules: {
-        // 表单验证规则
-        name: [
-          {
-            required: true,
-            message: '请输入角色名称',
-            trigger: 'blur'
-          }
-        ],
-        description: [
-          {
-            required: true,
-            message: '请输入描述信息',
-            trigger: 'blur'
-          }
-        ]
+        name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入描述信息', trigger: 'blur' }]
       }
     }
   },
-  created () {},
+  computed: {
+    title () {
+      return this.mode === 'add' ? '新增角色' : '编辑角色'
+    }
+  },
   methods: {
-    // 添加角色
     async addRole () {
-      const res = await sysRoleAdd(this.form)
-      if (res.data.code === 10000) {
-        this.$message.success(res.data.message)
-        this.closeDialog()
-        this.$emit('refresh')
-      }
+      await sysRolePost({ ...this.form })
+      this.$message.success('新增角色成功！')
+      this.close()
+      this.$emit('refresh')
     },
-    // 确认提交
     async submit () {
-      // A提交新增
+      // A、提交新增
       if (this.mode === 'add') {
-        this.$refs['form'].validate(v => {
-          if (v) {
-            // 验证通过，调接口
-            this.addRole()
-          } else {
-            this.$message.error('未按要求输入，请重新输入！')
-            return false
-          }
+        this.$refs['form'].validate(result => {
+          result
+            ? this.addRole()
+            : this.$message.error('未按要求输入，请重新输入！')
         })
       } else {
-        // B提交编辑
-        const res = await sysRoleEditUpdate(this.form)
-        if (res.data.code === 10000) {
-          this.$message.success('角色信息更新成功！')
-          this.$emit('refresh')
-          this.closeDialog()
-        }
+        // B、提交编辑
+        await sysRoleEditUpdate({ ...this.form })
+        this.$message.success('更新角色成功！')
+        this.$emit('refresh')
+        this.close()
       }
     },
-    // 关闭对话框、重置表单清除规则、清空对话框表单数据
-    closeDialog () {
-      this.$emit('input', false)
-      this.$refs['form'].resetFields()
-      this.form = {
-        id: '',
-        name: '',
-        description: ''
-      }
+    close () {
+      this.$emit('input', false) // 关闭弹框
+      this.$refs['form'].resetFields() // 重置表单验证规则
+      this.form = { id: '', name: '', description: '' } // 清空表单数据
     }
   }
+
 }
 </script>
 

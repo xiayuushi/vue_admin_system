@@ -39,7 +39,7 @@ export function sysUserBatch (data) {
   })
 }
 
-// 修改员工个人信息
+// 修改员工个人信息（包含修改角色信息）
 export function sysUserPut (data) {
   return request({
     url: `/sys/user/${data.id}`,

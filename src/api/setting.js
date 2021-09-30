@@ -5,23 +5,23 @@ export function sysRole (params) {
   return request({
     url: '/sys/role',
     method: 'get',
-    addToken: true,
-    params
+    params,
+    addToken: true
   })
 }
 
 // 添加角色
-export function sysRoleAdd (data) {
+export function sysRolePost (data) {
   return request({
     url: '/sys/role',
     method: 'post',
-    addToken: true,
-    data
+    data,
+    addToken: true
   })
 }
 
-// 删除角色
-export function sysRoleDel (id) {
+// 根据id删除角色
+export function sysRoleIdDelete (id) {
   return request({
     url: `/sys/role/${id}`,
     method: 'delete',
@@ -30,7 +30,7 @@ export function sysRoleDel (id) {
 }
 
 // 根据id获取角色详情
-export function sysRoleGet (id) {
+export function sysRoleId (id) {
   return request({
     url: `/sys/role/${id}`,
     method: 'get',
@@ -38,7 +38,7 @@ export function sysRoleGet (id) {
   })
 }
 
-// 编辑更新角色
+// 编辑更新角色、更新角色权限
 export function sysRoleEditUpdate (data) {
   return request({
     url: `/sys/role/${data.id}`,

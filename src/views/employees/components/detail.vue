@@ -1,7 +1,7 @@
 <template>
   <el-card class="container">
-    <el-tabs>
-      <el-tab-pane label="登录账户设置">
+    <el-tabs v-model="active">
+      <el-tab-pane label="登录账户设置" name="user">
         <el-form
           ref="form"
           :model="form"
@@ -21,18 +21,24 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="个人详情" lazy>
+      <el-tab-pane label="个人详情" name="userInfo" lazy>
         <component :is="'user'" :user-info="c_userInfo" />
       </el-tab-pane>
-      <el-tab-pane label="岗位信息">
+      <el-tab-pane label="岗位信息" name="jobInfo">
         <component :is="'job'" />
       </el-tab-pane>
     </el-tabs>
+    <el-button
+      v-if="active !== 'user'"
+      size="mini"
+      class="print"
+      @click="gotoPrint"
+    >打印</el-button>
   </el-card>
 </template>
 
 <script>
-import { sysUser } from '@/api/user'
+import { sysUserId } from '@/api/user'
 import { sysUserPut } from '@/api/employees'
 export default {
   components: {
@@ -41,6 +47,7 @@ export default {
   },
   data () {
     return {
+      active: 'user',
       id: this.$route.params.id,
       userInfo: '', // 员工基本信息
       c_userInfo: '', // 员工基本信息（深拷贝）
@@ -58,6 +65,10 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    // 跳往打印页面
+    gotoPrint () {
+      this.$router.push(`/print?active=${this.active}&id=${this.id}`)
+    },
     // 修改员工基本信息
     submit () {
       this.$refs['form'].validate(async result => {
@@ -71,7 +82,7 @@ export default {
     },
     // 获取员工基本信息
     async getUserInfo () {
-      const res = await sysUser(this.id)
+      const res = await sysUserId(this.id)
       this.userInfo = res.data.data
       this.c_userInfo = JSON.parse(JSON.stringify(this.userInfo))
       this.form.username = res.data.data.username
@@ -82,8 +93,14 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  position: relative;
   ::v-deep .el-form {
     width: 600px;
+  }
+  .print {
+    position: absolute;
+    right: 24px;
+    top: 20px;
   }
 }
 </style>

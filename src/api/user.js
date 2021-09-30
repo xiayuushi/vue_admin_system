@@ -20,8 +20,8 @@ export function sysProfile () {
   })
 }
 
-// 3、获取员工信息（获取头像）
-export function sysUser (id) {
+// 3、获取员工信息（含头像）
+export function sysUserId (id) {
   return request({
     url: `/sys/user/${id}`,
     method: 'get',

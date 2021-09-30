@@ -51,7 +51,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/setting',
+    redirect: '/detail/:id?',
     // meta对象就是设置侧边栏标题及图标的
     // meta: { title: '测试侧边菜单栏标题', icon: 'dashboard' },
     children: [
@@ -131,10 +131,25 @@ export const constantRoutes = [
         hidden: true,
         path: '/detail/:id?',
         component: () => import('@/views/employees/components/detail')
+      },
+      {
+        hidden: true,
+        path: '/print',
+        component: () => import('@/views/employees/components/print')
       }
     ]
   },
-
+  {
+    path: '/permission',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/permission'),
+        meta: { title: '权限', icon: 'el-icon-s-promotion' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

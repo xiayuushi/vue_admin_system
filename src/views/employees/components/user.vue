@@ -58,6 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
+            <FileUpload :image-url.sync="userInfo.staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -479,12 +480,12 @@ export default {
       const res = await getPersonalDetail(this.formData.userId)
       this.formData = res.data.data
     },
-    // 修改员工个人信息
+    // 修改员工个人信息（上半部分资料）
     async saveUser () {
       await sysUserPut(this.userInfo)
       this.$message.success('更新用户个人成功')
     },
-    // 修改用户详情的基础信息
+    // 修改用户详情的基础信息（下半部分资料）
     async savePersonal () {
       await updatePersonalDetail({ ...this.formData })
       this.$message.success('更新用户详情成功')

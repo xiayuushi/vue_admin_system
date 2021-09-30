@@ -21,6 +21,16 @@
           (pagination.page - 1) * pagination.size + $index + 1
         }}</template>
       </el-table-column>
+      <el-table-column label="头像" prop="staffPhoto" align="center">
+        <template v-slot="{ row }">
+          <img
+            v-imgerr="defaultImg"
+            :src="row.staffPhoto"
+            style="width:30px;height: 30px"
+            @click="qrcode(row.staffPhoto)"
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="姓名" prop="username" align="center" />
       <el-table-column label="手机号" prop="mobile" />
       <el-table-column label="工号" prop="workNumber" width="100" />
@@ -38,25 +48,13 @@
       <el-table-column label="入职时间" prop="timeOfEntry" width="100">
         <template v-slot="{ row }">{{ row.timeOfEntry | formatTime }}</template>
       </el-table-column>
-      <el-table-column
-        label="是否在职"
-        prop="formOfEmployment"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        label="状态"
-        prop="formOfEmployment"
-        align="center"
-        width="100"
-      />
       <el-table-column label="操作" prop="username" width="300" align="center">
         <template v-slot="{ row }">
           <el-button type="text" @click="lookInfo(row.id)">查看</el-button>
           <el-button type="text">转正</el-button>
           <el-button type="text">调岗</el-button>
           <el-button type="text">离职</el-button>
-          <el-button type="text">角色</el-button>
+          <el-button type="text" @click="roleClick(row.id)">角色</el-button>
           <el-button type="text" @click="del(row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -77,17 +75,34 @@
     />
     <!-- 新增框表单 -->
     <add :show.sync="showAdd" @refresh="getUserList" />
+    <!-- 二维码 -->
+    <el-dialog
+      :visible.sync="showCode"
+      class="el-dialog-self"
+      @close="closeCode"
+    >
+      <canvas ref="qrcode" />
+    </el-dialog>
+    <!-- 分配角色 -->
+    <role v-model="visible" :user-info="userInfo" />
   </el-card>
 </template>
 
 <script>
 import { sysUser, sysUserDel } from '@/api/employees'
+import { sysUserId } from '@/api/user'
 import add from './components/add'
+import Qrcode from 'qrcode'
+import role from './components/role'
 export default {
-  components: { add },
+  components: { add, role },
   data () {
     return {
+      userInfo: {},
+      visible: false, // 弹出角色分配
+      showCode: false, // 弹出二维码
       showAdd: false, // 弹出新增框
+      defaultImg: 'https://via.placeholder.com/30', // 图片出错加载的默认图片
       list: [
         // 员工信息
         {
@@ -97,9 +112,7 @@ export default {
           id: '604f764971f93f3ac8f365c2', // id
           mobile: '13800000002', // 手机号
           password: 'e10adc3949ba59abbe56e057f20f883e', // 密码
-          // 头像
-          staffPhoto:
-            'http://lbw-1307422960.cos.ap-nanjing.myqcloud.com/%E4%B8%89%E7%82%AE.jpg',
+          staffPhoto: 'https://via.placeholder.com/30', // 头像
           timeOfEntry: '2018-10-31T16:00:00.000Z', // 入职时间
           username: '王益区12', // 姓名
           workNumber: '92220' // 工号
@@ -118,6 +131,27 @@ export default {
     this.getUserList(this.pagination)
   },
   methods: {
+    // 分配角色
+    async roleClick (id) {
+      this.visible = true
+      const res = await sysUserId(id)
+      this.userInfo = res.data.data
+    },
+    // 关闭二维码
+    closeCode () {
+      this.showCode = false
+    },
+    // 生成二维码
+    qrcode (staffPhoto) {
+      if (!staffPhoto) return
+      this.showCode = true
+      this.$nextTick(() => {
+        Qrcode.toCanvas(this.$refs.qrcode, staffPhoto, {
+          width: 300,
+          height: 300
+        })
+      })
+    },
     // 查看详情
     lookInfo (id) {
       this.$router.push('/detail/' + id)
@@ -159,6 +193,7 @@ export default {
         this.list = res.data.data.rows
         this.pagination.total = res.data.data.total
       }
+      // console.log('res: ', res.data.data)
     },
     // 页容量改变
     handleSizeChange (v) {
@@ -181,6 +216,25 @@ export default {
   ::v-deep .pagination-self {
     text-align: center;
     margin-top: 10px;
+  }
+  ::v-deep .el-dialog-self {
+    text-align: center;
+    .el-dialog__header {
+      padding: 0;
+    }
+    .el-dialog__body {
+      padding: 0;
+    }
+    .el-dialog__headerbtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 0;
+    }
+    .dialog-img {
+      width: 100%;
+      vertical-align: middle;
+    }
   }
 }
 </style>

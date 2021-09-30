@@ -63,6 +63,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   .el-scrollbar {
+    background-color: #43a7fe;
     ::v-deep .el-menu {
       border: none;
       height: 100%;

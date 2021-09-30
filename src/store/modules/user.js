@@ -1,4 +1,4 @@
-import { sysLogin, sysProfile, sysUser } from '@/api/user'
+import { sysLogin, sysProfile, sysUserId } from '@/api/user'
 import { setToken, getToken, removeToken } from '@/utils/auth'
 const state = {
   // 本地有则读取本地缓存，否则取空值
@@ -44,7 +44,7 @@ const actions = {
     const res = await sysProfile()
     commit('mutationsfnSetUserInfo', res)
     // 获取完用户信息后再调用另一个有头像的接口获取头像
-    const res2 = await sysUser(res.data.data.userId)
+    const res2 = await sysUserId(res.data.data.userId)
     // 将两个请求的数据合并到state.userInfo中 方式1
     // commit('mutationsfnSetUserInfo', { ...res, ...res2 })
     // 将两个请求的数据合并到state.userInfo中 方式2
