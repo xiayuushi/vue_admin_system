@@ -42,8 +42,8 @@ const actions = {
     const res = await sysProfile()
     commit('mutationsfnSetUserInfo', res.data) // 获取用户信息用于验证token正确性
     const res2 = await sysUserId(res.data.userId) // 获取头像
-    commit('mutationsfnSetUserInfo', Object.assign({}, res, res2)) // 对象合并 方式2
-    // commit('mutationsfnSetUserInfo', { ...res, ...res2 }) // 对象合并 方式1
+    commit('mutationsfnSetUserInfo', Object.assign({}, res.data, res2.data)) // 对象合并 方式2
+    // commit('mutationsfnSetUserInfo', { ...res.data, ...res2.data }) // 对象合并 方式1
   }
 }
 

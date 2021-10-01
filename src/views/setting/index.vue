@@ -98,7 +98,7 @@ export default {
       this.list = res.data.rows
     },
     async getCompanyInfo () {
-      const res = await getCompany(this.userInfo.data.companyId)
+      const res = await getCompany(this.userInfo.companyId)
       this.$refs.company.companyInfo = res.data
     },
     add () {

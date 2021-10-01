@@ -48,6 +48,7 @@ export default {
     },
     async submit () {
       await sysUserPut({ ...this.userInfo, roleIds: this.checkLabel }) // 更新用户信息（含用户对应的角色信息）
+
       this.$message.success('更新角色信息成功！')
       this.close()
     }
