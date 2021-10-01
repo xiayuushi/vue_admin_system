@@ -1,59 +1,19 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title">人力资源管理平台</h3>
       </div>
-
       <el-form-item prop="mobile">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="mobile"
-          v-model="loginForm.mobile"
-          placeholder="请输入手机号码"
-          name="mobile"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
+        <span class="svg-container"><svg-icon icon-class="user" /></span>
+        <el-input ref="mobile" v-model="loginForm.mobile" placeholder="请输入手机号码" name="mobile" type="text" tabindex="1" auto-complete="on" />
       </el-form-item>
-
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="请输入密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
-        </span>
+        <span class="svg-container"><svg-icon icon-class="password" /></span>
+        <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin" />
+        <span class="show-pwd" @click="showPwd"><svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" /></span>
       </el-form-item>
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
       <div class="tips">
         <span style="margin-right:20px;">mobile: 13800000002</span>
         <span>password: 123456</span>
@@ -64,7 +24,6 @@
 
 <script>
 import { validMobile } from '@/utils/validate'
-// import { sysLogin } from '@/api/user.js'
 
 export default {
   name: 'Login',
@@ -104,25 +63,12 @@ export default {
   },
   methods: {
     showPwd () {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
+      this.passwordType === 'password' ? this.passwordType = '' : this.passwordType = 'password'
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
     },
     handleLogin () {
-      // 局部表单验证
-      // this.$refs.loginForm.validateField(['password'], errMessage => {
-      //   if (errMessage === '密码不能为空') {
-      //     this.$message.error('密码长度验证失败')
-      //   } else {
-      //     this.$message.success('密码长度验证成功')
-      //   }
-      // })
-
       // 全局表单验证
       this.$refs.loginForm.validate(async result => {
         if (result) {

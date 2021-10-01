@@ -133,11 +133,10 @@ export default {
           pagesize: this.pagination.pageSize
         })
       } catch {
-        console.log('取消删除')
+        console.log('用户取消了操作')
       }
     },
     setPower (row) {
-      // console.log(row)
       this.powerVisible = true
       this.$refs['power'].getRoleDetail(row.id)
     },

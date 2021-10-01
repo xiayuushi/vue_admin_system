@@ -1,10 +1,5 @@
 <template>
-  <el-dialog
-    class="dialog-container"
-    :visible="show"
-    title="新增员工"
-    @close="close"
-  >
+  <el-dialog class="dialog-container" :visible="show" title="新增员工" @close="close">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-form-item label="姓名" prop="username">
         <el-input v-model="form.username" />
@@ -13,33 +8,18 @@
         <el-input v-model="form.mobile" />
       </el-form-item>
       <el-form-item label="入职时间" prop="timeOfEntry">
-        <el-date-picker
-          v-model="form.timeOfEntry"
-          type="date"
-          placeholder="请选择入职时间"
-        />
+        <el-date-picker v-model="form.timeOfEntry" type="date" placeholder="请选择入职时间" />
       </el-form-item>
       <el-form-item label="聘用形式" prop="formOfEmployment">
         <el-select v-model="form.formOfEmployment">
-          <el-option
-            v-for="(item, index) in hireType"
-            :key="index"
-            :label="item.value"
-            :value="item.id"
-          />
+          <el-option v-for="(item, index) in hireType" :key="index" :label="item.value" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input v-model="form.workNumber" />
       </el-form-item>
       <el-form-item label="部门" prop="departmentName">
-        <el-cascader
-          ref="cascader"
-          value="form.departmentName"
-          :options="departmentList"
-          :props="props"
-          @change="handleChange"
-        />
+        <el-cascader value="form.departmentName" :options="departmentList" :props="props" @change="handleChange" />
       </el-form-item>
     </el-form>
     <div slot="footer" style="text-align:center">
@@ -53,7 +33,7 @@
 import { validMobile } from '@/utils/validate'
 import { sysUserAdd } from '@/api/employees'
 import { companyDepartment } from '@/api/departments'
-import EmployeeEnum from '../constant/index'
+import EmployeeEnum from '@/api/constant/employees'
 export default {
   props: {
     show: {
@@ -63,24 +43,22 @@ export default {
   },
   data () {
     return {
-      departmentList: [], // 部门列表
+      departmentList: [],
       form: {
-        username: '', // 姓名
-        mobile: '', // 手机号
-        formOfEmployment: '', // 聘用形式
-        workNumber: '', // 工号
-        timeOfEntry: '', // 入职时间
+        username: '',
+        mobile: '',
+        departmentName: [],
+        workNumber: '',
         correctionTime: '', // 转正时间
-        departmentName: [] // 部门
+        timeOfEntry: '', // 入职时间
+        formOfEmployment: '' // 聘用形式
       },
       rules: {
-        username: [
-          {
-            required: true,
-            message: '请输入姓名',
-            trigger: 'blur'
-          }
-        ],
+        username: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        workNumber: [{ required: true, message: '请输入工号', trigger: 'blur' }],
+        departmentName: [{ required: true, message: '请选择部门', trigger: 'change' }],
+        timeOfEntry: [{ required: true, message: '请选择入职时间', trigger: 'change' }],
+        formOfEmployment: [{ required: true, message: '请选择聘用形式', trigger: 'change' }],
         mobile: [
           {
             required: true,
@@ -89,50 +67,16 @@ export default {
           },
           {
             validator: (rule, value, callback) => {
-              if (validMobile(value)) {
-                callback()
-              } else {
-                callback(new Error('请输入正确的手机号'))
-              }
+              validMobile(value)
+                ? callback()
+                : callback(new Error('请输入正确的手机号'))
             },
             trigger: 'blur'
-          }
-        ],
-        formOfEmployment: [
-          {
-            required: true,
-            message: '请选择聘用形式',
-            trigger: 'change'
-          }
-        ],
-        workNumber: [
-          {
-            required: true,
-            message: '请输入工号',
-            trigger: 'blur'
-          }
-        ],
-        departmentName: [
-          {
-            required: true,
-            message: '请选择部门',
-            trigger: 'change'
-          }
-        ],
-        timeOfEntry: [
-          {
-            required: true,
-            message: '请选择入职时间',
-            trigger: 'change'
           }
         ]
       },
       hireType: EmployeeEnum.hireType, // 引入本地资源进行实时渲染必须先在data中声明
-      props: {
-        // 重新配置级联数据键值对
-        label: 'name',
-        value: 'id'
-      }
+      props: { label: 'name', value: 'id' } // 重新配置级联数据键值对
     }
   },
   created () {
@@ -152,32 +96,28 @@ export default {
         departmentName: []
       }
     },
+
     submit () {
       this.$refs['form'].validate(async result => {
         if (result) {
-          const res = await sysUserAdd(this.form)
-          if (res.data.code === 10000) {
-            this.$message.success('新增成功')
-          }
-          // console.log(res)
+          await sysUserAdd(this.form)
+          this.$message.success('新增成功!')
           this.$emit('refresh')
           this.close()
         } else {
-          this.$message.error('新增失败')
+          this.$message.error('新增失败!')
         }
       })
     },
+
     async getdepartmentsList () {
       const res = await companyDepartment()
-      // 获取部门列表 进行递归 得到级联选择器数据（部门列表中的树形结构数据）
-      const depts = this.processData(res.data.data.depts, '')
-      // 解决空级联无法选择的问题（将空字符置为undefined）
-      const _depts = this.processCascaderUndefined(depts)
-      // 整合为级联需要的数据格式只有id、name、children三项的数据
-      this.departmentList = this.processCascaderData(_depts)
-      // 将value(id)置换为label(name)方便接口调用
-      this.departmentList = this.value2Label(this.departmentList)
+      const depts = this.processData(res.data.data.depts, '') // 获取部门列表 进行递归 得到级联选择器数据（部门列表中的树形结构数据）
+      const _depts = this.processCascaderUndefined(depts) // 解决空级联无法选择的问题（将空字符置为undefined）
+      this.departmentList = this.processCascaderData(_depts) // 整合为级联需要的数据格式只有id、name、children三项的数据
+      this.departmentList = this.value2Label(this.departmentList) // 将value(id)置换为label(name)方便接口调用
     },
+
     // 1、树形结构数据整合 arr遍历的数据源数组 condition遍历条件
     processData (arr, condition) {
       return arr.filter(item => {
@@ -187,6 +127,7 @@ export default {
         }
       })
     },
+
     // 2、处理空级联
     // 级联选择器中如果最后选项出现空会出现无法选择的bug
     // 必须将最后的空字符转成undefined
@@ -200,6 +141,7 @@ export default {
       })
       return arr
     },
+
     // 3、整合为级联数据格式
     // 只有id、name、children三类key的多维数组形式
     processCascaderData (arr) {
@@ -216,6 +158,7 @@ export default {
           }
       )
     },
+
     // 4、将选中的级联数据value(id)显示为label(name)，以便符合接口需求
     // 当前接口需要的是 label(name)
     value2Label (arr) {
@@ -228,6 +171,7 @@ export default {
       })
       return arr
     },
+
     handleChange (value) {
       this.form.departmentName = value.join('/')
     }

@@ -3,46 +3,25 @@
     <!-- 顶部 -->
     <TipInfo class="tip-info">
       <template #right>
-        <el-button type="primary" @click="uploadExcel">导入</el-button>
-        <el-button type="primary" @click="addClick">+ 新增员工</el-button>
+        <el-button type="primary" @click="toExcelUploadPage">导入</el-button>
+        <el-button type="primary" @click="addEmployees">+ 新增员工</el-button>
       </template>
     </TipInfo>
     <!-- 表格 -->
-    <el-table
-      v-loading="loading"
-      :data="list"
-      border
-      style="width: 100%"
-      lazy
-      highlight-current-row
-    >
+    <el-table v-loading="loading" :data="list" border style="width: 100%" lazy highlight-current-row>
       <el-table-column label="序号" prop="id" width="80" align="center">
-        <template v-slot="{ $index }">{{
-          (pagination.page - 1) * pagination.size + $index + 1
-        }}</template>
+        <template v-slot="{ $index }">{{ (pagination.page - 1) * pagination.size + $index + 1 }}</template>
       </el-table-column>
       <el-table-column label="头像" prop="staffPhoto" align="center">
         <template v-slot="{ row }">
-          <img
-            v-imgerr="defaultImg"
-            :src="row.staffPhoto"
-            style="width:30px;height: 30px"
-            @click="qrcode(row.staffPhoto)"
-          >
+          <img v-imgerr="defaultImg" :src="row.staffPhoto" style="width:30px;height: 30px" @click="generateQRcode(row.staffPhoto)">
         </template>
       </el-table-column>
       <el-table-column label="姓名" prop="username" align="center" />
       <el-table-column label="手机号" prop="mobile" />
       <el-table-column label="工号" prop="workNumber" width="100" />
-      <el-table-column
-        label="聘用形式"
-        prop="formOfEmployment"
-        align="center"
-        width="100px"
-      >
-        <template v-slot="{ row }">{{
-          row.formOfEmployment | formatHireType
-        }}</template>
+      <el-table-column label="聘用形式" prop="formOfEmployment" align="center" width="100px">
+        <template v-slot="{ row }">{{ row.formOfEmployment | formatHireType }}</template>
       </el-table-column>
       <el-table-column label="部门" prop="departmentName" align="center" />
       <el-table-column label="入职时间" prop="timeOfEntry" width="100">
@@ -50,11 +29,11 @@
       </el-table-column>
       <el-table-column label="操作" prop="username" width="300" align="center">
         <template v-slot="{ row }">
-          <el-button type="text" @click="lookInfo(row.id)">查看</el-button>
+          <el-button type="text" @click="lookDetail(row.id)">查看</el-button>
           <el-button type="text">转正</el-button>
           <el-button type="text">调岗</el-button>
           <el-button type="text">离职</el-button>
-          <el-button type="text" @click="roleClick(row.id)">角色</el-button>
+          <el-button type="text" @click="assignRole(row.id)">角色</el-button>
           <el-button type="text" @click="del(row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -76,11 +55,7 @@
     <!-- 新增框表单 -->
     <add :show.sync="showAdd" @refresh="getUserList" />
     <!-- 二维码 -->
-    <el-dialog
-      :visible.sync="showCode"
-      class="el-dialog-self"
-      @close="closeCode"
-    >
+    <el-dialog :visible.sync="showCode" class="el-dialog-self" @close="closeQRCode">
       <canvas ref="qrcode" />
     </el-dialog>
     <!-- 分配角色 -->
@@ -89,19 +64,19 @@
 </template>
 
 <script>
+import Qrcode from 'qrcode'
 import { sysUser, sysUserDel } from '@/api/employees'
 import { sysUserId } from '@/api/user'
 import add from './components/add'
-import Qrcode from 'qrcode'
 import role from './components/role'
 export default {
   components: { add, role },
   data () {
     return {
       userInfo: {},
-      visible: false, // 弹出角色分配
-      showCode: false, // 弹出二维码
-      showAdd: false, // 弹出新增框
+      visible: false, // 角色分配显示隐藏
+      showCode: false, // 二维码显示隐藏
+      showAdd: false, // 新增框显示隐藏
       defaultImg: 'https://via.placeholder.com/30', // 图片出错加载的默认图片
       list: [
         // 员工信息
@@ -119,7 +94,6 @@ export default {
         }
       ],
       pagination: {
-        // 分页器
         total: 1, // 数据总数
         page: 1, // 页码
         size: 10 // 页容量
@@ -131,79 +105,67 @@ export default {
     this.getUserList(this.pagination)
   },
   methods: {
-    // 分配角色
-    async roleClick (id) {
+    async assignRole (id) {
       this.visible = true
       const res = await sysUserId(id)
       this.userInfo = res.data.data
     },
-    // 关闭二维码
-    closeCode () {
+    closeQRCode () {
       this.showCode = false
     },
-    // 生成二维码
-    qrcode (staffPhoto) {
+    generateQRcode (staffPhoto) {
       if (!staffPhoto) return
       this.showCode = true
       this.$nextTick(() => {
+        // 必须使用$nextTick等canvas标签生成后再写入二维码，否则初次打开对话框看不到二维码
         Qrcode.toCanvas(this.$refs.qrcode, staffPhoto, {
           width: 300,
           height: 300
         })
       })
     },
-    // 查看详情
-    lookInfo (id) {
+    lookDetail (id) {
       this.$router.push('/detail/' + id)
     },
-    // 去excel文件上传页
-    uploadExcel () {
+    toExcelUploadPage () {
       this.$router.push('/excel?redirect=' + this.$route.fullPath)
     },
-    // 新增员工
-    addClick () {
+    addEmployees () {
       this.showAdd = true
     },
-    // 删除当前列表项
     async del (id) {
       try {
         await this.$confirm('是否删除该项?', '标题')
         this.loading = true
         await sysUserDel(id)
-
         this.loading = false
         this.$message.success('删除成功')
 
         if (this.list.length === 1 && this.pagination.page !== 1) {
-          this.pagination.page =
-            this.pagination.page < 0 ? 1 : this.pagination.page - 1
+          this.pagination.page = this.pagination.page < 0 ? 1 : this.pagination.page - 1
         }
         this.getUserList(this.pagination)
       } catch (error) {
         console.log(error)
       }
     },
-    // 获取员工列表
     async getUserList (data) {
       const res = await sysUser({
         page: this.pagination.page,
         size: this.pagination.size
       })
-      if (res.data.code === 10000) {
-        this.list = res.data.data.rows
-        this.pagination.total = res.data.data.total
-      }
-      // console.log('res: ', res.data.data)
+      this.list = res.data.data.rows
+      this.pagination.total = res.data.data.total
     },
     // 页容量改变
-    handleSizeChange (v) {
-      this.pagination.size = v
+    handleSizeChange (val) {
+      this.pagination.size = val
       this.pagination.page = 1
       this.getUserList(this.pagination)
     },
     // 页码改变
-    handleCurrentChange (v) {
-      this.pagination.page = v
+    handleCurrentChange (val) {
+      this.pagination.page = val
       this.getUserList(this.pagination)
     }
   }

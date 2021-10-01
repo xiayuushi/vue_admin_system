@@ -13,7 +13,6 @@ router.beforeEach(async (to, from, next) => {
       next()
     } else {
       // 没有token，去登录页面时携带参数（使用加密转换避免出现中文字符出错的情况）
-      // console.log(to)
       next('/login?xxx=' + encodeURIComponent(to.fullPath))
     }
   } else {

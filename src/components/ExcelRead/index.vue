@@ -29,6 +29,7 @@ export default {
   props: {
     beforeUpload: Function, // eslint-disable-line
     onSuccess: Function// eslint-disable-line
+    // 最主要的是这两个方法，使用时需要传入该方法去定义上传前的文件格式尺寸等验证 以及 Excel读取解析成功后的逻辑
   },
   data() {
     return {

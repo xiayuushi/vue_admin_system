@@ -1,10 +1,6 @@
 <template>
   <!-- 给el-dialog的visible属性添加.sync修饰符 可以在右上角x按钮关闭该对话框 -->
-  <el-dialog
-    :title="mode === 'edit' ? '编辑组织架构' : '新增组织架构'"
-    :visible="openAdd"
-    @close="closeAdd"
-  >
+  <el-dialog :title="title" :visible="openAdd" @close="close">
     <el-form ref="form" :model="model" :rules="rules" label-width="100px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="model.name" />
@@ -28,7 +24,7 @@
     </el-form>
     <template #footer>
       <div style="text-align: center" class="primary">
-        <el-button @click="closeAdd">取消</el-button>
+        <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="submit">确定</el-button>
       </div>
     </template>
@@ -38,8 +34,8 @@
 <script>
 import {
   sysUserSimple,
-  companyDepartmentAdd,
-  companyDepartmentEdit
+  companyDepartmentPost,
+  companyDepartmentPut
 } from '@/api/departments'
 export default {
   props: {
@@ -103,19 +99,14 @@ export default {
       }
     }
     return {
-      mode: 'add', // 定义标识符用于区分 edit编辑表单 与 add新增表单
-      options: [], // 下拉框选项
-      currentRow: '', // 当前行的数据
       model: {
-        // 表单数据
         name: '',
         code: '',
         manager: '',
         introduce: '',
-        pid: '' // 当前点击项的id
+        pid: ''
       },
       rules: {
-        // 表单验证规则
         name: [
           { required: true, message: '必填', trigger: 'blur' },
           { min: 1, max: 50, message: '请输入1-50位字符', trigger: 'blur' },
@@ -134,11 +125,18 @@ export default {
           { required: true, message: '必填', trigger: 'blur' },
           { min: 1, max: 300, message: '请输入1-300位字符', trigger: 'blur' }
         ]
-      }
+      },
+      options: [],
+      currentRow: '',
+      mode: 'add' // 定义标识符用于区分开启的是哪个表单 edit编辑表单 与 add新增表单
+    }
+  },
+  computed: {
+    title () {
+      return this.mode === 'edit' ? '编辑组织架构' : '新增组织架构'
     }
   },
   watch: {
-    // 侦听oppAdd
     openAdd: {
       handler (newVal) {
         if (newVal === false) {
@@ -162,17 +160,14 @@ export default {
     }
   },
   created () {
-    // 打开表单
     this.openForm()
-    // 获取员工列表用于option选项
     this.getUserList()
   },
-  mounted () {},
   destroyed () {
-    this.$bus.$off('openAddFn')
+    this.$bus.$off('openAddFn') // 必须解除监听否则可能会引起多次触发
   },
   methods: {
-    closeAdd () {
+    close () {
       this.$emit('update:openAdd', false)
     },
     async getUserList () {
@@ -184,17 +179,10 @@ export default {
     submit () {
       this.$refs['form'].validate(async result => {
         if (result) {
-          // 新增确认
-          if (this.mode === 'add') {
-            this.addDepartment()
-          } else {
-            // 编辑确认
-            this.editDepartment()
-          }
-          // 刷新父级
-          // this.$parent.getList() // 该方式有弊端不建议使用
-          this.$emit('refresh') // 先在父级定义@refresh="getList"后通过$emit调用
-          this.closeAdd() // 关闭弹窗
+          this.mode === 'add' ? this.addDepartment() : this.editDepartment() // 新增 或 编辑
+          this.$emit('refresh') // 刷新父级列表 方式1：先在父级定义@refresh="getList"后通过$emit调用
+          // this.$parent.getList() // 刷新父级列表 方式2：该方式有弊端不建议使用
+          this.close()
         }
       })
     },
@@ -207,34 +195,30 @@ export default {
         this.$emit('update:openAdd', v1) // 子组件下拉组件打开弹框
         this.currentRow = v2 // 存储传入的当前点击项信息
         this.mode = v3 // 如果有传v3，则v3的默认值'add'会被覆盖
-        // 如果是编辑表单
+        // 如果是编辑表单需要使用深拷贝切断对象引用，避免不必要的bug
         if (v3 === 'edit') {
           this.model = JSON.parse(JSON.stringify(v2))
         }
       })
     },
-    // 部门新增
+
     async addDepartment () {
-      const res = await companyDepartmentAdd({
+      await companyDepartmentPost({
         ...this.model,
         pid: this.currentRow.id
       })
-      if (res.data.code === 10000) {
-        this.$message.success('新增成功')
-      }
+      this.$message.success('新增成功')
     },
-    // 部门编辑
+
     async editDepartment () {
-      const res = await companyDepartmentEdit({
+      await companyDepartmentPut({
         name: this.model.name,
         code: this.model.code,
         manager: this.model.manager,
         introduce: this.model.introduce,
         id: this.model.id
       })
-      if (res.data.code === 10000) {
-        this.$message.success('编辑成功')
-      }
+      this.$message.success('编辑成功')
     }
   }
 }

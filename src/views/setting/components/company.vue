@@ -23,7 +23,6 @@ export default {
   data () {
     return {
       companyInfo: {
-        // 公司信息
         name: '',
         companyAddress: '',
         companyPhone: '',

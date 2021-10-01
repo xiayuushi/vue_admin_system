@@ -40,7 +40,6 @@ export default {
   ::v-deep .el-card__body {
     display: flex;
     justify-content: space-between;
-    // align-items: center;
   }
 
   .left {

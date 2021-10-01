@@ -22,12 +22,7 @@
               <tr>
                 <th style="width:10%">姓名</th>
                 <td colspan="6" style="width:80%">{{ formData.username }}</td>
-                <td rowspan="5" style="width:10%">
-                  <img
-                    style="width:155px;height:218px"
-                    :src="formData.staffPhoto"
-                  >
-                </td>
+                <td rowspan="5" style="width:10%"><img style="width:155px;height:218px" :src="formData.staffPhoto"></td>
               </tr>
               <tr>
                 <th>性别</th>
@@ -49,9 +44,7 @@
                 <th style="width:10%">是否可编辑</th>
                 <td style="width:35%">{{ formData.isItEditable }}</td>
                 <th style="width:10%">是否隐藏号码</th>
-                <td colspan="5" style="width:45%">
-                  {{ formData.doYouHideNumbers }}
-                </td>
+                <td colspan="5" style="width:45%">{{ formData.doYouHideNumbers }}</td>
               </tr>
               <tr>
                 <th>国家地区</th>
@@ -111,17 +104,13 @@
                 <th>子女状态</th>
                 <td>{{ formData.stateOfChildren }}</td>
                 <th>子女有无商业保险</th>
-                <td colspan="5">
-                  {{ formData.doChildrenHaveCommercialInsurance }}
-                </td>
+                <td colspan="5">{{ formData.doChildrenHaveCommercialInsurance }}</td>
               </tr>
               <tr>
                 <th>有无违法违纪行为</th>
                 <td>{{ formData.isThereAnyViolationOfLawOrDiscipline }}</td>
                 <th>有无重大病史</th>
-                <td colspan="5">
-                  {{ formData.areThereAnyMajorMedicalHistories }}
-                </td>
+                <td colspan="5">{{ formData.areThereAnyMajorMedicalHistories }}</td>
               </tr>
               <tr class="title">
                 <td colspan="8" class="centInfo">通讯信息</td>
@@ -356,25 +345,18 @@ export default {
       active: this.$route.query.active
     }
   },
-  // 创建完毕状态
   created () {
     this.active === 'userInfo' ? this.getSysUser() : this.getJobInfo()
   },
-  // 组件更新
   methods: {
     async getSysUser () {
       const userInfo = await sysUserId(this.userId)
       const detailInfo = await getPersonalDetail(this.userId)
-      this.formData = Object.assign(
-        {},
-        detailInfo.data.data,
-        userInfo.data.data
-      )
+      this.formData = Object.assign({}, detailInfo.data.data, userInfo.data.data)
     },
     async getJobInfo () {
       const jobInfo = await getJobDetail(this.userId)
       this.formData = jobInfo.data.data
-      console.log(this.formData)
     }
   }
 }

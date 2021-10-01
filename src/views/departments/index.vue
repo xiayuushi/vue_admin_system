@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- 卡片 -->
     <el-card class="box-card">
       <el-tabs>
         <el-tab-pane label="组织架构">
@@ -18,11 +17,7 @@
                 <!-- 作用域插槽中 scoped对象 结构为node与data -->
                 <!-- node 是当前节点的node对象，是element-ui进行过处理的一些数据 -->
                 <!-- data 是当前节点中的数据 可以通过data获取当前行的数据 -->
-                <treeItem
-                  :item="data"
-                  style="width: 100%;"
-                  @refresh="getList"
-                />
+                <treeItem :item="data" style="width: 100%;" @refresh="getList" />
               </template>
             </el-tree>
           </div>
@@ -30,7 +25,6 @@
       </el-tabs>
     </el-card>
     <!-- 弹框 -->
-    <!-- <add :openAdd="openAddf" @update:openAdd="openAddf=$event" /> -->
     <add :open-add.sync="openAddf" :init-data="initDataf" @refresh="getList" />
   </div>
 </template>
@@ -43,31 +37,16 @@ export default {
   components: { treeItem, add },
   data () {
     return {
-      loading: false, // loading效果
-      openAddf: false, // 弹出框显示隐藏
+      loading: false,
+      openAddf: false,
+      activeName: 'first',
       initDataf: [], // 传递给弹出框的所有部门信息
-      activeName: 'first', // 标签页选中
-      topInfo: {
-        // 顶部公司数据
+      topInfo: { // 顶部公司数据
         name: '广州韵时有限公司',
         manager: '负责人',
         id: '' // 人为添加该字段用于表单验证中是否重复判断
       },
-      treeData: [
-        // 公司下方的部门信息渲染
-        {
-          label: '总裁办',
-          manager: 'xx',
-          children: [
-            {
-              label: 'aaaaa',
-              manager: 'aaaaaa'
-            }
-          ]
-        },
-        { label: '行政部', manager: 'xx' },
-        { label: '人事部', manager: 'xx' }
-      ]
+      treeData: [] // 公司下方的部门信息渲染
     }
   },
   created () {
@@ -77,20 +56,17 @@ export default {
     async getList () {
       this.loading = true
       const res = await companyDepartment()
-      // console.log(res.data.data.depts)
-      if (res.data.code === 10000) {
-        this.initDataf = res.data.data.depts
-        this.treeData = this.processData(res.data.data.depts, '')
-        this.topInfo.name = res.data.data.companyName
-        this.topInfo.manager = res.data.data.companyManage
-      }
+      this.initDataf = res.data.data.depts
+      this.treeData = this.processData(res.data.data.depts, '')
+      this.topInfo.name = res.data.data.companyName
+      this.topInfo.manager = res.data.data.companyManage
       this.loading = false
     },
-    processData (arr, str) {
+    processData (arr, condition) {
       // 处理第一层数据 pid === ''(没有父级)
       // 处理第二层数据 pid === 父级的id
       return arr.filter(item => {
-        if (item.pid === str) {
+        if (item.pid === condition) {
           item.children = this.processData(arr, item.id)
           return true
         }

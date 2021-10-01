@@ -13,15 +13,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-pagination
-      :current-page="pagination.page"
-      :page-sizes="pagination.pageSizes"
-      :page-size="pagination.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="pagination.total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    /> -->
     <add ref="add" :visible.sync="visible" @refresh="getPermission" />
   </el-card>
 </template>
@@ -35,12 +26,6 @@ export default {
     return {
       data: [],
       visible: false
-      // pagination: {
-      //   page: 1,
-      //   total: 10,
-      //   pageSize: 10,
-      //   pageSizes: [1, 2, 5, 10, 20, 50, 100]
-      // }
     }
   },
   created () {
@@ -55,7 +40,7 @@ export default {
     async edit (row) {
       this.visible = true
       this.$refs.add.mode = 'edit'
-      this.$refs.add.form = JSON.parse(JSON.stringify(row))
+      this.$refs.add.form = JSON.parse(JSON.stringify(row)) // 深拷贝解除引用关系引起的"联动"bug
     },
     async del (id) {
       try {
@@ -79,15 +64,6 @@ export default {
         }
       })
     }
-  //   handleSizeChange (v) {
-  //     this.pagination.pageSize = v
-  //     this.pagination.page = 1
-  //     this.getPermission()
-  //   },
-  //   handleCurrentChange (v) {
-  //     this.pagination.page = v
-  //     this.getPermission()
-  //   }
   }
 }
 </script>

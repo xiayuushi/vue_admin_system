@@ -18,7 +18,7 @@ export function sysUserSimple () {
 }
 
 // 新增部门
-export function companyDepartmentAdd (data) {
+export function companyDepartmentPost (data) {
   return request({
     url: '/company/department',
     method: 'post',
@@ -37,7 +37,7 @@ export function companyDepartmentDel (id) {
 }
 
 // 编辑部门
-export function companyDepartmentEdit (data) {
+export function companyDepartmentPut (data) {
   return request({
     url: `/company/department/${data.id}`,
     method: 'put',

@@ -2,13 +2,7 @@
   <el-card class="container">
     <el-tabs v-model="active">
       <el-tab-pane label="登录账户设置" name="user">
-        <el-form
-          ref="form"
-          :model="form"
-          :rules="rules"
-          label-width="200px"
-          style="padding: 40px"
-        >
+        <el-form ref="form" :model="form" :rules="rules" label-width="200px" style="padding: 40px">
           <el-form-item label="姓名" prop="username">
             <el-input v-model="form.username" />
           </el-form-item>
@@ -28,12 +22,7 @@
         <component :is="'job'" />
       </el-tab-pane>
     </el-tabs>
-    <el-button
-      v-if="active !== 'user'"
-      size="mini"
-      class="print"
-      @click="gotoPrint"
-    >打印</el-button>
+    <el-button v-if="active !== 'user'" size="mini" class="print" @click="toPrintPage">打印</el-button>
   </el-card>
 </template>
 
@@ -65,11 +54,11 @@ export default {
     this.getUserInfo()
   },
   methods: {
-    // 跳往打印页面
-    gotoPrint () {
+
+    toPrintPage () {
       this.$router.push(`/print?active=${this.active}&id=${this.id}`)
     },
-    // 修改员工基本信息
+
     submit () {
       this.$refs['form'].validate(async result => {
         if (result) {
@@ -80,12 +69,12 @@ export default {
         }
       })
     },
-    // 获取员工基本信息
+
     async getUserInfo () {
       const res = await sysUserId(this.id)
       this.userInfo = res.data.data
-      this.c_userInfo = JSON.parse(JSON.stringify(this.userInfo))
       this.form.username = res.data.data.username
+      this.c_userInfo = JSON.parse(JSON.stringify(this.userInfo))
     }
   }
 }

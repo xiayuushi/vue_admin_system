@@ -16,7 +16,7 @@
     </el-form>
     <template #footer>
       <div style="text-align: center">
-        <el-button @click="cancel">取消</el-button>
+        <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="submit">确定</el-button>
       </div>
     </template>
@@ -58,20 +58,8 @@ export default {
   methods: {
     close () {
       this.$emit('update:visible', false)
-      // 重置表单验证规则
-      this.$refs['form'].resetFields()
-      // 清空表单
-      this.form = {
-        name: '',
-        code: '',
-        description: '',
-        type: '',
-        pid: '',
-        enVisible: '0'
-      }
-    },
-    cancel () {
-      this.close()
+      this.$refs['form'].resetFields() // 重置表单验证规则
+      this.form = { name: '', code: '', description: '', type: '', pid: '', enVisible: '0' } // 清空表单
     },
     submit () {
       this.$refs['form'].validate(async result => {

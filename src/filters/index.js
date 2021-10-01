@@ -1,37 +1,31 @@
-// 全局过滤器
-
 import moment from 'moment'
-// 需要处理的对象
-import EmployeeEnum from '@/views/employees/constant'
+import EmployeeEnum from '@/api/constant/employees'
 
 export default {
   // 处理聘用形式
-  formatHireType: v => {
+  formatHireType: payload => {
     // Q1、有聘用字段
-    if (v) {
-      if (v === '非正式') {
+    if (payload) {
+      if (payload === '非正式') {
         return '非正式'
       }
-      if (v === '正式') {
+      if (payload === '正式') {
         return '正式'
       }
       try {
-        // 考虑到后端返回的数据类型不一致，因此必须转数据格式
-        v = Number(v)
-        // 匹配数据
-        const str = EmployeeEnum.hireType.find(item => item.id === v)
-        // 匹配成功返回数据对应的值
+        payload = Number(payload) // 考虑到后端返回的数据类型不一致，因此必须转数据格式
+        const str = EmployeeEnum.hireType.find(item => item.id === payload)
         return str.value
       } catch (error) {
         // 出错逻辑暂时不作处理
       }
     } else {
-      // Q2、没有聘用字段 或者 聘用字段不规范
-      return '非正式'
+      return '非正式' // Q2、没有聘用字段 或者 聘用字段不规范
     }
   },
+
   // 处理聘用时间
-  formatTime: v => {
-    return moment(v).format('YYYY-MM-DD')
+  formatTime: payload => {
+    return moment(payload).format('YYYY-MM-DD')
   }
 }

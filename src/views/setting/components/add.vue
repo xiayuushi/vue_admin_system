@@ -31,7 +31,7 @@ export default {
   },
   data () {
     return {
-      mode: 'add', // 标记对话框为编辑状态或者新增状态
+      mode: 'add', // 用于标识编辑状态或新增状态
       form: { id: '', name: '', description: '' },
       rules: {
         name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],

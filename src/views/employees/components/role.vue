@@ -47,8 +47,7 @@ export default {
       this.close()
     },
     async submit () {
-      // 将更新后的rolesId传入覆盖之前的 重新发送接口请求更新个人资料（含角色信息更改）
-      await sysUserPut({ ...this.userInfo, roleIds: this.checkLabel })
+      await sysUserPut({ ...this.userInfo, roleIds: this.checkLabel }) // 更新用户信息（含用户对应的角色信息）
       this.$message.success('更新角色信息成功！')
       this.close()
     }
