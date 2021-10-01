@@ -65,7 +65,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   res => {
     if (res.data.success) {
-      return res
+      return res.data
     } else {
       // 弹出错误提示、重置token、捕捉错误
       Message.error(res.data.message)

@@ -7,12 +7,7 @@
             <treeItem :item="topInfo" :is-top="true" @refresh="getList" />
             <hr>
             <!-- 树形结构 -->
-            <el-tree
-              v-loading="loading"
-              element-loading-text="拼命加载中"
-              element-loading-spinner="el-icon-loading"
-              :data="treeData"
-            >
+            <el-tree v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" :data="treeData">
               <template v-slot="{ node, data }">
                 <!-- 作用域插槽中 scoped对象 结构为node与data -->
                 <!-- node 是当前节点的node对象，是element-ui进行过处理的一些数据 -->
@@ -25,7 +20,7 @@
       </el-tabs>
     </el-card>
     <!-- 弹框 -->
-    <add :open-add.sync="openAddf" :init-data="initDataf" @refresh="getList" />
+    <add :dialog-show.sync="dialogShow" :all-departments="allDepartments" @refresh="getList" />
   </div>
 </template>
 
@@ -38,9 +33,9 @@ export default {
   data () {
     return {
       loading: false,
-      openAddf: false,
+      dialogShow: false,
       activeName: 'first',
-      initDataf: [], // 传递给弹出框的所有部门信息
+      allDepartments: [], // 传递给弹出框的所有部门信息
       topInfo: { // 顶部公司数据
         name: '广州韵时有限公司',
         manager: '负责人',
@@ -56,10 +51,10 @@ export default {
     async getList () {
       this.loading = true
       const res = await companyDepartment()
-      this.initDataf = res.data.data.depts
-      this.treeData = this.processData(res.data.data.depts, '')
-      this.topInfo.name = res.data.data.companyName
-      this.topInfo.manager = res.data.data.companyManage
+      this.allDepartments = res.data.depts
+      this.treeData = this.processData(res.data.depts, '')
+      this.topInfo.name = res.data.companyName
+      this.topInfo.manager = res.data.companyManage
       this.loading = false
     },
     processData (arr, condition) {

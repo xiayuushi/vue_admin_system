@@ -1,6 +1,6 @@
 <template>
   <!-- 给el-dialog的visible属性添加.sync修饰符 可以在右上角x按钮关闭该对话框 -->
-  <el-dialog :title="title" :visible="openAdd" @close="close">
+  <el-dialog :title="title" :visible="dialogShow" @close="close">
     <el-form ref="form" :model="model" :rules="rules" label-width="100px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="model.name" />
@@ -10,12 +10,7 @@
       </el-form-item>
       <el-form-item label="负责人" prop="manager">
         <el-select v-model="model.manager" placeholder="请选择">
-          <el-option
-            v-for="(item, index) in options"
-            :key="index"
-            :value="item.username"
-            :label="item.username"
-          />
+          <el-option v-for="(item, index) in options" :key="index" :value="item.username" :label="item.username" />
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
@@ -32,19 +27,15 @@
 </template>
 
 <script>
-import {
-  sysUserSimple,
-  companyDepartmentPost,
-  companyDepartmentPut
-} from '@/api/departments'
+import { sysUserSimple, companyDepartmentPost, companyDepartmentPut } from '@/api/departments'
 export default {
   props: {
-    openAdd: {
+    dialogShow: {
       // 父级传过来的控制显示与隐藏
       type: Boolean,
       default: null
     },
-    initData: {
+    allDepartments: {
       // 父级传过来的所有部门信息
       type: Array,
       default: null
@@ -59,22 +50,22 @@ export default {
         // st1、找出同一层级的子级部门：
         // （当前项点击新增，增加的是当前项的子级）
         // 遍历列表中pid（子级）与当前点击项的id确认同一层级的子级部门
-        const xxx = this.initData.filter(
+        const sameDepartment = this.allDepartments.filter(
           item => item.pid === this.currentRow.id
         )
         // st2、查看部门名称是否重复
         // 新增时，所有都不能重复
-        const bol = xxx.some(item => item.name === value)
+        const bol = sameDepartment.some(item => item.name === value)
         bol ? callback(new Error('已存在重复部门' + value)) : callback()
       } else {
         // 情况2、编辑表单时部门名称可以重复
         // st1、找出自己的同级部门：
         // （当前项点击编辑，编辑的是当前项自己）
         // 遍历列表中pid（子级）与当前点击项的pid确认同一层级部门
-        const xxx = this.initData.filter(
+        const sameDepartment = this.allDepartments.filter(
           item => item.pid === this.currentRow.pid
         )
-        const bol = xxx.some(
+        const bol = sameDepartment.some(
           // st2、查看部门名称是否重复
           // 编辑时，因为自己可以重复，因此要排除自己，但其他不能重复
           item => item.name === value && item.id !== this.currentRow.id
@@ -88,11 +79,11 @@ export default {
     var validateCode = (rule, value, callback) => {
       // 情况1、新增时，所有部门的编码都不可重复
       if (this.mode === 'add') {
-        const bol = this.initData.some(item => item.code === value)
+        const bol = this.allDepartments.some(item => item.code === value)
         bol ? callback(new Error('已存在重复编码')) : callback()
       } else {
         // 情况2、编辑时，自身编码可以重复，因此需要排除自身
-        const bol = this.initData.some(
+        const bol = this.allDepartments.some(
           item => item.code === value && item.id !== this.currentRow.id
         )
         bol ? callback(new Error('已存在重复编码')) : callback()
@@ -164,7 +155,7 @@ export default {
     this.getUserList()
   },
   destroyed () {
-    this.$bus.$off('openAddFn') // 必须解除监听否则可能会引起多次触发
+    this.$bus.$off('openDialogFn') // 必须解除监听否则可能会引起多次触发
   },
   methods: {
     close () {
@@ -172,9 +163,7 @@ export default {
     },
     async getUserList () {
       const res = await sysUserSimple()
-      if (res.data.code === 10000) {
-        this.options = res.data.data
-      }
+      this.options = res.data
     },
     submit () {
       this.$refs['form'].validate(async result => {
@@ -188,7 +177,7 @@ export default {
     },
     openForm () {
       // 打开弹框接收数据
-      this.$bus.$on('openAddFn', (v1, v2, v3 = 'add') => {
+      this.$bus.$on('openDialogFn', (v1, v2, v3 = 'add') => {
         // v1 接收兄弟下拉组件传递的 显示隐藏的布尔值实参
         // v2 接收兄弟下拉组件传递的 当前点击行的部门信息
         // v3 接收兄弟下拉组件传递的 默认值为add表示是新增表单

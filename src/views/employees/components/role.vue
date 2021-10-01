@@ -36,7 +36,7 @@ export default {
   },
   async created () {
     const res = await sysRole({ ...this.userInfo })
-    this.rolesList = res.data.data.rows // 获取角色列表渲染复选框
+    this.rolesList = res.data.rows // 获取角色列表渲染复选框
   },
   methods: {
     close () {

@@ -72,8 +72,8 @@ export default {
 
     async getUserInfo () {
       const res = await sysUserId(this.id)
-      this.userInfo = res.data.data
-      this.form.username = res.data.data.username
+      this.userInfo = res.data
+      this.form.username = res.data.username
       this.c_userInfo = JSON.parse(JSON.stringify(this.userInfo))
     }
   }

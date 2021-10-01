@@ -352,11 +352,11 @@ export default {
     async getSysUser () {
       const userInfo = await sysUserId(this.userId)
       const detailInfo = await getPersonalDetail(this.userId)
-      this.formData = Object.assign({}, detailInfo.data.data, userInfo.data.data)
+      this.formData = Object.assign({}, detailInfo.data, userInfo.data)
     },
     async getJobInfo () {
       const jobInfo = await getJobDetail(this.userId)
-      this.formData = jobInfo.data.data
+      this.formData = jobInfo.data
     }
   }
 }

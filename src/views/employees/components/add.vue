@@ -112,7 +112,7 @@ export default {
 
     async getdepartmentsList () {
       const res = await companyDepartment()
-      const depts = this.processData(res.data.data.depts, '') // 获取部门列表 进行递归 得到级联选择器数据（部门列表中的树形结构数据）
+      const depts = this.processData(res.data.depts, '') // 获取部门列表 进行递归 得到级联选择器数据（部门列表中的树形结构数据）
       const _depts = this.processCascaderUndefined(depts) // 解决空级联无法选择的问题（将空字符置为undefined）
       this.departmentList = this.processCascaderData(_depts) // 整合为级联需要的数据格式只有id、name、children三项的数据
       this.departmentList = this.value2Label(this.departmentList) // 将value(id)置换为label(name)方便接口调用

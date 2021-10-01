@@ -25,7 +25,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/index',
     // meta对象就是设置侧边栏标题及图标的
     // meta: { title: '测试侧边菜单栏标题', icon: 'dashboard' },
     children: [

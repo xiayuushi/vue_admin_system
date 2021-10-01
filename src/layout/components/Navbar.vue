@@ -2,11 +2,7 @@
   <div class="navbar">
     <div class="left">
       <!-- 图标是根据左侧菜单栏sidebar组件伸缩而伸缩的 因此需要取到sidebar的控制属性sidebar.opened -->
-      <i
-        v-if="sidebar.opened"
-        class="icon el-icon-s-unfold"
-        @click="openSideBar"
-      />
+      <i v-if="sidebar.opened" class="icon el-icon-s-unfold" @click="openSideBar" />
       <i v-else class="icon el-icon-s-fold" @click="openSideBar" />
       <span>vue admin system</span>
       <em>体验版</em>
@@ -14,13 +10,8 @@
     <div class="right">
       <el-dropdown @command="commandEvent">
         <div class="el-dropdown-link wrap">
-          <img
-            v-imgerr="defaultImg"
-            class="auth-img"
-            :src="userInfo.data.data.staffPhoto"
-            alt=""
-          >
-          <span class="username">{{ userInfo.data.data.username }}</span>
+          <img v-imgerr="defaultImg" class="auth-img" :src="userInfo.staffPhoto" alt="">
+          <span class="username">{{ userInfo.username }}</span>
           <i class="el-icon-arrow-down el-icon--right" />
         </div>
         <el-dropdown-menu>

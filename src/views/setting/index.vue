@@ -94,12 +94,12 @@ export default {
   methods: {
     async getRole (v) {
       const res = await sysRole(v)
-      this.pagination.total = res.data.data.total
-      this.list = res.data.data.rows
+      this.pagination.total = res.data.total
+      this.list = res.data.rows
     },
     async getCompanyInfo () {
-      const res = await getCompany(this.userInfo.data.data.companyId)
-      this.$refs.company.companyInfo = res.data.data
+      const res = await getCompany(this.userInfo.data.companyId)
+      this.$refs.company.companyInfo = res.data
     },
     add () {
       this.$refs.add.mode = 'add'
@@ -115,7 +115,7 @@ export default {
 
       // B、当前数据不完整：通过接口来编辑
       const res = await sysRoleId(row.id)
-      this.$refs.add.form = res.data.data
+      this.$refs.add.form = res.data
     },
     async del (row) {
       try {

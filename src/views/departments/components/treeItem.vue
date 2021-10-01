@@ -35,7 +35,7 @@ export default {
       switch (command) {
         case 'add':
           // 点击新增按钮: true打开弹窗 this.item传递当前点击项的数据
-          this.$bus.$emit('openAddFn', true, this.item)
+          this.$bus.$emit('openDialogFn', true, this.item)
           break
         case 'del':
           // 点击删除按钮：删除当前点击项
@@ -48,7 +48,7 @@ export default {
         case 'edit':
           // 编辑按钮：编辑弹框表单（与新增的弹框表单公用）
           // 第三参数 'edit'标识当前会编辑表单状态
-          this.$bus.$emit('openAddFn', true, this.item, 'edit')
+          this.$bus.$emit('openDialogFn', true, this.item, 'edit')
           break
       }
     },

@@ -142,7 +142,7 @@ export default {
     async getJobInfo () {
       this.formData.userId = this.$route.params.id
       const res = await getJobDetail(this.formData.userId)
-      this.formData = res.data.data
+      this.formData = res.data
     },
     async saveJob () {
       const res = await updateJob(this.formData)

@@ -1,33 +1,18 @@
 <template>
   <div class="upload">
-    <!-- 上传：用于头像上传 有上传显示图片 无上传显示icon -->
-    <el-upload
-      class="avatar-uploader"
-      action="#"
-      :show-file-list="false"
-      :before-upload="beforeUpload"
-      :http-request="httpRequest"
-    >
-      <img
-        v-if="imageUrl.trim()"
-        :src="imageUrl.trim()"
-        class="avatar"
-        @click.stop.prevent="imgClick"
-      >
+    <!-- 上传：用于头像上传 有上传则显示图片 无上传则显示icon -->
+    <el-upload class="avatar-uploader" action="#" :show-file-list="false" :before-upload="beforeUpload" :http-request="httpRequest">
+      <img v-if="imageUrl" :src="imageUrl" class="avatar" @click.stop.prevent="imgClick">
       <i v-else class="el-icon-plus avatar-uploader-icon" />
     </el-upload>
     <!-- 弹框：点击图片 放大预览图 -->
-    <el-dialog
-      :visible.sync="isShow"
-      :show-close="false"
-      class="el-dialog-self"
-    >
+    <el-dialog :visible.sync="isShow" :show-close="false" class="el-dialog-self">
       <div style="text-align:center">
-        <img :src="imageUrl.trim()" class="dialog-img">
+        <img :src="imageUrl" class="dialog-img">
       </div>
     </el-dialog>
     <!-- icon：当有上传图片时 移入光标 显示icon 点击icon可以删除上传到图片 -->
-    <i v-if="imageUrl.trim()" class="el-icon-close" @click="removeUpload" />
+    <i v-if="imageUrl" class="el-icon-close" @click="removeUpload" />
     <!-- 进度条：el-progress 为了显示效果给个动画 transition -->
     <transition name="xxx">
       <el-progress v-if="showProgress" :percentage="percent" />
@@ -75,8 +60,7 @@ export default {
       if (!limit) {
         this.$message.error('文件不能超过500KB')
       }
-      // 符合条件，才会执行上传动作
-      return type && limit
+      return type && limit // 符合条件，才会执行上传动作
     },
     httpRequest (params) {
       this.showProgress = true // 上传时开启进度条
@@ -102,7 +86,7 @@ export default {
         },
         (err, data) => {
           // 上传到腾讯云存储桶服务器的状态（err失败，data成功）
-          console.log(err || data)
+          // console.log(err || data)
           if (!err && data.statusCode === 200) {
             // 修改预览图
             // this.imageUrl = `https://${data.Location}`

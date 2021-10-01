@@ -318,7 +318,7 @@ export default {
     async getPersonalDetailBase () {
       this.formData.userId = this.$route.params.id
       const res = await getPersonalDetail(this.formData.userId)
-      this.formData = res.data.data
+      this.formData = res.data
     },
     // 修改员工个人信息（上半部分资料）
     async saveUser () {

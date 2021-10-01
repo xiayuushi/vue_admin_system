@@ -59,7 +59,7 @@
       <canvas ref="qrcode" />
     </el-dialog>
     <!-- 分配角色 -->
-    <role v-model="visible" :user-info="userInfo" />
+    <role ref="role" v-model="visible" :user-info="userInfo" />
   </el-card>
 </template>
 
@@ -108,7 +108,8 @@ export default {
     async assignRole (id) {
       this.visible = true
       const res = await sysUserId(id)
-      this.userInfo = res.data.data
+      this.userInfo = res.data
+      this.$refs['role'].checkLabel = this.userInfo.roleIds
     },
     closeQRCode () {
       this.showCode = false
@@ -154,8 +155,8 @@ export default {
         page: this.pagination.page,
         size: this.pagination.size
       })
-      this.list = res.data.data.rows
-      this.pagination.total = res.data.data.total
+      this.list = res.data.rows
+      this.pagination.total = res.data.total
     },
     // 页容量改变
     handleSizeChange (val) {

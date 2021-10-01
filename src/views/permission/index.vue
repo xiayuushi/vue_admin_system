@@ -54,7 +54,7 @@ export default {
     },
     async getPermission () {
       const res = await sysPermission()
-      this.data = this.processTreeData(res.data.data, '0')
+      this.data = this.processTreeData(res.data, '0')
     },
     processTreeData (arr, condition) {
       return arr.filter(item => {

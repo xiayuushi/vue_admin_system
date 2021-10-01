@@ -44,12 +44,12 @@ export default {
   methods: {
     async getPowerList () {
       const res = await sysPermission()
-      this.data = this.processTreeData(res.data.data)
+      this.data = this.processTreeData(res.data)
     },
     // 该方法会在父组件传入id进行调用
     async getRoleDetail (id) {
       const res = await sysRoleId(id)
-      this.userInfo = res.data.data
+      this.userInfo = res.data
       // 方式1、从个人详细信息中获取角色已有权限 设置给 el-tree的复选框默认选中数组 （default-checked-keys属性）
       // 注意：default-checked-keys属性只能初次设置默认勾选，后续不能通过该属性更改勾选
       this.defaultChecked = this.userInfo.permIds
