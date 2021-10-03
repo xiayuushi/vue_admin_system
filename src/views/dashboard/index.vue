@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <el-button @click="btnclick">测试</el-button>
   </div>
 </template>
 
@@ -13,6 +14,11 @@ export default {
   },
   computed: {
     ...mapGetters(['name'])
+  },
+  methods: {
+    btnclick () {
+      this.$store.dispatch('routes/dynamicAddUserRoutes')
+    }
   }
 }
 </script>

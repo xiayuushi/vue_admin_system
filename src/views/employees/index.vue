@@ -3,7 +3,7 @@
     <!-- 顶部 -->
     <TipInfo class="tip-info">
       <template #right>
-        <el-button type="primary" @click="toExcelUploadPage">导入</el-button>
+        <el-button v-if="importButtonVisible('employees_import_button')" type="primary" @click="toExcelUploadPage">导入员工</el-button>
         <el-button type="primary" @click="addEmployees">+ 新增员工</el-button>
       </template>
     </TipInfo>

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { sysRole } from '@/api/setting'
+import { sysRole } from '@/api/settings'
 import { sysUserPut } from '@/api/employees'
 
 export default {

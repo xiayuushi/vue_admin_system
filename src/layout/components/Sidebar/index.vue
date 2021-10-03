@@ -36,7 +36,11 @@ export default {
     ...mapGetters(['sidebar']),
     routes () {
       // 整个项目的所有配置信息，是一个 数组，包含所有路由路径
-      return this.$router.options.routes
+      // 坑点3：$router.options.routes并非是响应式的
+      // 在使用router.addRoutes()添加权限路由到路由配置后，不能实时更新路由，已不符合要求，因此注释
+      // return this.$router.options.routes
+      return this.$store.state.routes.allRoutes
+      // 注意：上面state.routes中的routes是模块名
     },
     activeMenu () {
       const route = this.$route

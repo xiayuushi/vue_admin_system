@@ -1,5 +1,5 @@
 <template>
-  <div class="setting">
+  <div class="settings">
     <el-card>
       <el-tabs v-model="activeName">
         <el-tab-pane label="角色管理" name="roles">
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { sysRole, sysRoleIdDelete, sysRoleId, getCompany } from '@/api/setting'
+import { sysRole, sysRoleIdDelete, sysRoleId, getCompany } from '@/api/settings'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -167,7 +167,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.setting {
+.settings {
   .el-pagination {
     text-align: center;
   }

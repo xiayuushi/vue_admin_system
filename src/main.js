@@ -30,6 +30,10 @@ Object.keys(directives).forEach(item => Vue.directive(item, directives[item]))
 // bus对象用于非父子组件的传值传值
 Vue.prototype.$bus = new Vue()
 
+// 全局mixin混入
+import mixin from './mixins'
+Vue.mixin(mixin)
+
 // 英文版 ElementUI
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 // Vue.use(ElementUI, { locale })
@@ -42,6 +46,7 @@ import Print from 'vue-print-nb'
 Vue.use(Print)
 
 Vue.config.productionTip = false
+Vue.config.devtools = true
 
 new Vue({
   el: '#app',

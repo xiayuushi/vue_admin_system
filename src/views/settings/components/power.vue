@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import { sysPermission } from '@/api/permission'
-import { sysRoleId, sysRoleEditUpdate } from '@/api/setting'
+import { sysPermission } from '@/api/permissions'
+import { sysRoleId, sysRoleEditUpdate } from '@/api/settings'
 export default {
   model: {
     prop: 'powerVisible'

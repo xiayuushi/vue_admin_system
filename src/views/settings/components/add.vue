@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { sysRolePost, sysRoleEditUpdate } from '@/api/setting'
+import { sysRolePost, sysRoleEditUpdate } from '@/api/settings'
 export default {
   model: {
     prop: 'visible'

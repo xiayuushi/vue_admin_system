@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { sysPermissionPost, sysPermissionPut } from '@/api/permission'
+import { sysPermissionPost, sysPermissionPut } from '@/api/permissions'
 export default {
   props: {
     visible: {

@@ -28,6 +28,7 @@ const mutations = {
   mutationsfnDel () {
     this.commit('user/mutationsfnRemoveToken')
     this.commit('user/mutationsfnSetUserInfo', '')
+    this.commit('routes/resetAllRoutes')
   }
 }
 

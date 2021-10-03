@@ -1,15 +1,16 @@
 <template>
-  <el-card class="permission">
-    <el-button size="mini" type="primary" class="button" @click="add(1,'0')">添加</el-button>
+  <el-card class="permissions">
+    <el-button size="mini" type="primary" class="button" @click="add(1,'0')">添加权限</el-button>
     <el-table :data="data" row-key="id">
       <el-table-column label="菜单名称" prop="name" />
       <el-table-column label="权限标识" prop="code" />
       <el-table-column label="权限描述" prop="description" />
       <el-table-column label="权限操作">
         <template v-slot="{ row }">
-          <el-button type="text" @click="add(2, row.id)">添加</el-button>
-          <el-button type="text" @click="edit(row)">修改</el-button>
-          <el-button type="text" @click="del(row.id)">删除</el-button>
+          <el-button type="text" @click="add(2, row.id)">添加权限</el-button>
+          <el-button type="text" @click="add(2, row.id)">添加按钮</el-button>
+          <el-button type="text" @click="edit(row)">修改权限</el-button>
+          <el-button type="text" @click="del(row.id)">删除权限</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { sysPermission, sysPermissionId } from '@/api/permission'
+import { sysPermission, sysPermissionId } from '@/api/permissions'
 import add from './components/add'
 export default {
   components: { add },
@@ -69,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.permission {
+.permissions {
   position: relative;
   .button {
     position: absolute;
