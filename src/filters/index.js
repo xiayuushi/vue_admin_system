@@ -27,5 +27,9 @@ export default {
   // 处理聘用时间
   formatTime: payload => {
     return moment(payload).format('YYYY-MM-DD')
+  },
+  // 处理日历时间（转为日期）
+  formatDate: payload => {
+    return moment(payload).get('date')
   }
 }

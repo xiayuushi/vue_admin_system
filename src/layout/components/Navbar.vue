@@ -48,7 +48,7 @@ export default {
       defaultImg: 'http://via.placeholder.com/30x30.png'
 
       // 本地图片
-      // defaultImg: require('@/assets/404_images/404.png')
+      // defaultImg: require('@/assets/404/404.png')
     }
   },
   computed: {

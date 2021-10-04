@@ -4,7 +4,7 @@
       <el-form-item label="权限名称" prop="name">
         <el-input v-model="form.name" />
       </el-form-item>
-      <el-form-item label="企业可见" prop="enVisible">
+      <el-form-item label="角色可见" prop="enVisible">
         <el-switch v-model="form.enVisible" active-text="可见" inactive-text="不可见" active-value="1" inactive-value="0" />
       </el-form-item>
       <el-form-item label="权限标识" prop="code">

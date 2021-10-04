@@ -4,7 +4,7 @@
       ref="tree"
       :data="data"
       show-checkbox
-      :props="{label: 'name'}"
+      :props="{ label: 'name' }"
       :check-strictly="true"
       node-key="id"
       :default-checked-keys="defaultChecked"
@@ -44,7 +44,9 @@ export default {
   methods: {
     async getPowerList () {
       const res = await sysPermission()
-      this.data = this.processTreeData(res.data)
+      // 此处过滤等同于直接在下方定义processTreeData时 在item.pid===condition 后 &&加入判断 item.enVisible === '1'
+      const result = res.data.filter(item => item.enVisible === '1')
+      this.data = this.processTreeData(result)
     },
     // 该方法会在父组件传入id进行调用
     async getRoleDetail (id) {
@@ -62,7 +64,10 @@ export default {
       this.$refs['tree'].setCheckedKeys([])
     },
     async submit () {
-      await sysRoleEditUpdate({ ...this.userInfo, permIds: this.$refs['tree'].getCheckedKeys() })
+      await sysRoleEditUpdate({
+        ...this.userInfo,
+        permIds: this.$refs['tree'].getCheckedKeys()
+      })
       this.close()
       this.$message.success('更新权限成功！')
     },
