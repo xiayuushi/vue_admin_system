@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import ElementUI from 'element-ui'
+import Element from 'element-ui'
 
 // 导航守卫及路由
 import './permission'
@@ -34,12 +34,16 @@ Vue.prototype.$bus = new Vue()
 import mixin from './mixins'
 Vue.mixin(mixin)
 
+// 国际化 i18n 针对 ElementUI的处理
+import i18n from './lang'
+Vue.use(Element, { i18n: (key, value) => i18n.t(key, value) })
+
 // 英文版 ElementUI
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
-// Vue.use(ElementUI, { locale })
+// Vue.use(Element, { locale })
 
 // 中文版 ElementUI
-Vue.use(ElementUI)
+// Vue.use(Element)
 
 // 打印
 import Print from 'vue-print-nb'
@@ -52,5 +56,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

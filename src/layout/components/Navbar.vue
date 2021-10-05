@@ -8,6 +8,8 @@
       <em>体验版</em>
     </div>
     <div class="right">
+      <ScreenFull />
+      <Language />
       <el-dropdown @command="commandEvent">
         <div class="el-dropdown-link wrap">
           <img v-imgerr="defaultImg" class="auth-img" :src="userInfo.staffPhoto" alt="">
@@ -115,6 +117,8 @@ export default {
     }
   }
   .right {
+    display: flex;
+    align-items: center;
     .wrap {
       display: flex;
       padding-right: 20px;

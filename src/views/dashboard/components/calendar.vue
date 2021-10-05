@@ -1,6 +1,6 @@
 <template>
   <el-card class="vertical-16 calendar">
-    <h3>工作日历</h3>
+    <h3>{{ $t('test') }}</h3>
     <el-divider />
     <div class="select">
       <el-select v-model="year" @change="change">
