@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './', // 项目完成后，在进行打包前将此处路径'/'改成相对路径'./'
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
